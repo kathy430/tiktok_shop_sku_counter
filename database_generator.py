@@ -34,9 +34,9 @@ else:
     print(new_items[["Seller SKU", "Variation"]].to_string(index = False))
 
     # add to product list
-    new_items["Product SKU"] = "PLS UPDATE"
-    new_items["Product SKU 2"] = "PLS UPDATE"
-    new_items["Quantity Used"] = "PLS UPDATE"
+    new_items["Product SKU"] = "N/A"
+    new_items["Product SKU 2"] = "N/A"
+    new_items["Quantity Used"] = "N/A"
     new_items = new_items[["Seller SKU", "Variation", "Product SKU", "Product SKU 2", "Quantity Used"]]
 
     updated_product_data = pd.concat([product_data.drop(columns = ["key"]), new_items], ignore_index = True)
