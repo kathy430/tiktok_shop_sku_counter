@@ -8,18 +8,16 @@ product_file = "productList.csv"
 # if product list csv doesnt exist, create it
 if not os.path.exists(product_file):
     print("Product list not found. Creating a new one...")
-    empty_db = pd.DataFrame(columns = ["Seller SKU", "Variation", "Product SKU", 
+    empty_db = pd.DataFrame(columns = ["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
                                        "Product SKU 2", "Product SKU 3", "Product SKU 4",
-                                       "Product SKU 5", "Product SKU 6", "Product SKU 7",
-                                       "Quantity Used"])
+                                       "Product SKU 5", "Product SKU 6", "Product SKU 7"])
     empty_db.to_csv(product_file, index = False)
 
 # check if product list csv file has all columns
 product_data = pd.read_csv(product_file)
-needed_cols = ["Seller SKU", "Variation", "Product SKU", 
+needed_cols = ["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
                "Product SKU 2", "Product SKU 3", "Product SKU 4",
-               "Product SKU 5", "Product SKU 6", "Product SKU 7",
-               "Quantity Used"]
+               "Product SKU 5", "Product SKU 6", "Product SKU 7"]
 
 missing = [col for col in needed_cols if col not in product_data.columns]
 
@@ -49,10 +47,10 @@ else:
                "Product SKU 4", "Product SKU 5", "Product SKU 6", 
                "Product SKU 7"]] = "N/A"
     
-    new_items = new_items[["Seller SKU", "Variation", "Product SKU", 
+    new_items = new_items[["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
                            "Product SKU 2","Product SKU 3", 
                            "Product SKU 4", "Product SKU 5", "Product SKU 6", 
-                           "Product SKU 7", "Quantity Used"]]
+                           "Product SKU 7"]]
 
     updated_product_data = pd.concat([product_data.drop(columns = ["key"]), new_items], ignore_index = True)
     updated_product_data.to_csv(product_file, index = False)
