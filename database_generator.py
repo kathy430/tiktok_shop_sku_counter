@@ -5,16 +5,19 @@ import os
 tiktok_file = "Shipped order-2025-10-02-22_07.csv"
 product_file = "productListUpdated - Copy.csv"
 
+# open tiktok csv
+tiktok_data = pd.read_csv(tiktok_file)
+
 # if product list csv doesnt exist, create it
 if not os.path.exists(product_file):
     print("Product list not found. Creating a new one...")
-    product_data = pd.DataFrame(columns=["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
+    product_data = pd.DataFrame(columns=["Seller SKU", "Product Name", "Variation", "Quantity Used", "Product SKU", 
                                        "Product SKU 2", "Product SKU 3", "Product SKU 4",
                                        "Product SKU 5", "Product SKU 6", "Product SKU 7"])
 else:
     # check if product list csv file has all columns
     product_data = pd.read_csv(product_file, keep_default_na=False)
-    needed_cols = ["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
+    needed_cols = ["Seller SKU", "Product Name", "Variation", "Quantity Used", "Product SKU", 
                    "Product SKU 2", "Product SKU 3", "Product SKU 4",
                    "Product SKU 5", "Product SKU 6", "Product SKU 7"]
 
@@ -24,16 +27,20 @@ else:
     # add missing values
     if missing_cols:
         for col in missing_cols:
-            product_data[col] = "N/A"
+            # if a missing column is from tiktok data, copy it
+            if col in tiktok_data.columns:
+                product_data[col] = tiktok_data[col].copy()
+            else:
+                product_data[col] = "N/A"
 
         # reorganize columns if they aren't in speciified order    
         product_data = product_data[needed_cols]
+
         print(f"Added missing columns: {missing_cols} and set value to N/A")
     else:
         print("All required columns already exist!!")
 
-# open csv files
-tiktok_data = pd.read_csv(tiktok_file)
+
 
 # creating composite keys
 tiktok_data["key"] = tiktok_data["Seller SKU"].astype(str).str.strip() + "_" + tiktok_data["Variation"].astype(str).str.strip()
