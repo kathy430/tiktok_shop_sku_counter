@@ -18,7 +18,19 @@ else:
                    "Product SKU 2", "Product SKU 3", "Product SKU 4",
                    "Product SKU 5", "Product SKU 6", "Product SKU 7"]
 
-    missing = [col for col in needed_cols if col not in product_data.columns]
+# find missing values
+missing_cols = [col for col in needed_cols if col not in product_data.columns]
+
+# add missing values
+print(product_data.head())
+for col in missing_cols:
+    product_data[col] = "N/A"
+
+if missing_cols:
+    print(product_data.columns)
+    print(f"Added missing columns: {missing_cols} and set value to N/A")
+else:
+    print("All required columns already exist!!")
 
 # open csv files
 tiktok_data = pd.read_csv(tiktok_file)
