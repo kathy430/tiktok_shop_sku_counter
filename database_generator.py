@@ -36,15 +36,15 @@ else:
         # reorganize columns if they aren't in speciified order    
         product_data = product_data[needed_cols]
 
-        print(f"Added missing columns: {missing_cols} and set value to N/A")
+        print(f"Added missing columns: {missing_cols} and updated values")
     else:
         print("All required columns already exist!!")
 
 
 
 # creating composite keys
-tiktok_data["key"] = tiktok_data["Seller SKU"].astype(str).str.strip() + "_" + tiktok_data["Variation"].astype(str).str.strip()
-product_data["key"] = product_data["Seller SKU"].astype(str).str.strip() + "_" + product_data["Variation"].astype(str).str.strip()
+tiktok_data["key"] = tiktok_data["Seller SKU"].astype(str).str.strip() + "_" + tiktok_data["Product Name"].astype(str).str.strip() + "_" + tiktok_data["Variation"].astype(str).str.strip()
+product_data["key"] = product_data["Seller SKU"].astype(str).str.strip() + "_" + product_data["Product Name"].astype(str).str.strip() + "_" + product_data["Variation"].astype(str).str.strip()
 
 # find rows in tiktok data that are not in product data
 new_items = tiktok_data[~tiktok_data["key"].isin(product_data["key"])].copy()
@@ -62,18 +62,19 @@ if new_items.empty:
         product_data.to_csv(product_file, index=False)
 else:
     print(f"Found {len(new_items)} new items not in database:\n")
-    print(new_items[["Seller SKU", "Variation"]].to_string(index=False))
+    print(new_items[["Seller SKU", "Product Name", "Variation"]].to_string(index=False))
 
     # add to product list
     new_items[["Quantity Used", "Product SKU", "Product SKU 2", "Product SKU 3", 
                "Product SKU 4", "Product SKU 5", "Product SKU 6", 
                "Product SKU 7"]] = "N/A"
     
-    new_items = new_items[["Seller SKU", "Variation", "Quantity Used", "Product SKU", 
+    new_items = new_items[["Seller SKU", "Product Name", "Variation", "Quantity Used", "Product SKU", 
                            "Product SKU 2","Product SKU 3", 
                            "Product SKU 4", "Product SKU 5", "Product SKU 6", 
                            "Product SKU 7"]]
 
     updated_product_data = pd.concat([product_data.drop(columns=["key"]), new_items], ignore_index=True)
-    updated_product_data.to_csv(product_file, index=False)
+    print(new_items.head())
+    #updated_product_data.to_csv(product_file, index=False)
     
